@@ -2,7 +2,9 @@
 Welcome to the **Hands-On RoboVITics Workshop Repository!**
 In this event, you’ll learn how to **build and control your own bot from scratch** in just **2 days**.
 
-**Part 1: ESP32 + Python**  
+**Part 1: Basic setup ..
+define module,pins and functions
+controling ESP32 and motor driver
 Learn how to connect and program the ESP32 microcontroller using Python.  
 You’ll write code to make your bot come alive.  
 
@@ -10,7 +12,7 @@ You’ll write code to make your bot come alive.
 Here you will Build a login page and a control page using simple web development tools.  
 This is where you’ll learn how to control your bot through a browser.  
 
-**Part 3: Advanced Python**  
+**Part 3: Backend (python)**  
 Here’s where things get exciting! You’ll dive deeper into Python and unlock advanced features for your bot.  
 
 ## What You’ll Need
