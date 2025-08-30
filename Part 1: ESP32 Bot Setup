@@ -1,0 +1,76 @@
+import network
+import socket
+import time
+from machine import Pin, time_pulse_us
+
+# Wi-Fi credentials
+SSID = 'vivo V50'
+PASSWORD = '12340000'
+
+# Login credentials
+USERNAME = 'admin'
+PASSWORD_AUTH = '1234'
+
+session_authenticated = False
+
+# Motor pins
+AIN1 = Pin(25, Pin.OUT)
+AIN2 = Pin(33, Pin.OUT)
+BIN1 = Pin(27, Pin.OUT)
+BIN2 = Pin(14, Pin.OUT)
+PWMA = Pin(32, Pin.OUT)
+PWMB = Pin(12, Pin.OUT)
+STBY = Pin(26, Pin.OUT)
+
+PWMA.on()
+PWMB.on()
+STBY.on()
+
+# Ultrasonic sensor pins
+TRIG = Pin(2, Pin.OUT)
+ECHO = Pin(4, Pin.IN)
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    while not wlan.isconnected():
+        time.sleep(1)
+    print("Connected, IP:", wlan.ifconfig()[0])
+    return wlan.ifconfig()[0]
+
+def move_forward():
+    AIN1.on(); AIN2.off()
+    BIN1.on(); BIN2.off()
+
+def move_backward():
+    AIN1.off(); AIN2.on()
+    BIN1.off(); BIN2.on()
+
+def move_left():
+    AIN1.off(); AIN2.on()
+    BIN1.on(); BIN2.off()
+
+def move_right():
+    AIN1.on(); AIN2.off()
+    BIN1.off(); BIN2.on()
+
+def stop():
+    AIN1.off(); AIN2.off()
+    BIN1.off(); BIN2.off()
+
+def measure_distance():
+    TRIG.off()
+    time.sleep_us(2)
+    TRIG.on()
+    time.sleep_us(10)
+    TRIG.off()
+
+    try:
+        pulse = time_pulse_us(ECHO, 1, 30000)
+        if pulse < 0:
+            return None
+        dist_cm = (pulse / 2) / 29.1
+        return dist_cm
+    except:
+        return None
