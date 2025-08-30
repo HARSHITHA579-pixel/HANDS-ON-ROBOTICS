@@ -17,7 +17,7 @@ Turn your ESP32 into a live web server that manages logins, checks obstacles in 
 - A laptop with Python installed (Thonny)  
 - ESP32 board  
 - The kit provided in the workshop  
-- A web browser (Chrome/Edge/Firefox)  
+- Web browser (recommended: Chrome/Edge/Firefox)  
 
 ---
 
@@ -29,5 +29,3 @@ Turn your ESP32 into a live web server that manages logins, checks obstacles in 
 - Building confidence through practical learning  
 
 ---
-
-**Feel free to ask any senior volunteers around you.**
