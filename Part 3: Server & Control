@@ -1,0 +1,77 @@
+def handle_client(client):
+    global session_authenticated
+    request = client.recv(1024).decode('utf-8')
+    print(request)
+
+    method = request.split(' ')[0]
+    path = request.split(' ')[1]
+
+    if path.startswith('/login') and method == 'POST':
+        body = request.split('\r\n\r\n')[-1]
+        data = {}
+        for pair in body.split('&'):
+            if '=' in pair:
+                key, value = pair.split('=')
+                data[key] = value
+
+        username = data.get("username", "")
+        password = data.get("password", "")
+
+        if username == USERNAME and password == PASSWORD_AUTH:
+            session_authenticated = True
+            client.send('HTTP/1.1 302 Found\r\nLocation: /\r\n\r\n')
+        else:
+            session_authenticated = False
+            client.send('HTTP/1.1 401 Unauthorized\r\n\r\n<h1>Unauthorized</h1>')
+        client.close()
+        return
+
+    if not session_authenticated and path != "/login":
+        client.send('HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n')
+        client.send(login_page())
+        client.close()
+        return
+
+    # Real-time distance AJAX call
+    if path == "/distance":
+        dist = measure_distance()
+        if dist is None or dist > 100:
+            msg = "No Obstacle Detected"
+        else:
+            msg = f"Obstacle Ahead: {dist:.2f} cm"
+        client.send('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n')
+        client.send(msg)
+        client.close()
+        return
+
+    # Bot movement control
+    if "/forward" in path:
+        move_forward()
+    elif "/backward" in path:
+        move_backward()
+    elif "/left" in path:
+        move_left()
+    elif "/right" in path:
+        move_right()
+    else:
+        stop()
+
+    # Main control UI
+    client.send('HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n')
+    client.send(html_page())
+    client.close()
+
+# Server setup
+ip = connect_wifi()
+addr = socket.getaddrinfo(ip, 80)[0][-1]
+s = socket.socket()
+s.bind(addr)
+s.listen(1)
+print("Listening on", addr)
+
+while True:
+    try:
+        client, addr = s.accept()
+        handle_client(client)
+    except Exception as e:
+        print("Error:", e)
