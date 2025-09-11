@@ -53,7 +53,7 @@ def handle_client(client):
         move_left()
     elif "/right" in path:
         move_right()
-    else:
+    elif "/stop" in path:
         stop()
 
     # Main control UI
