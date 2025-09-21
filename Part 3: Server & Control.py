@@ -45,15 +45,18 @@ def handle_client(client):
         return
 
     # Bot movement control
-    if "/forward" in path:
+     if path == "/forward":
         move_forward()
-    elif "/backward" in path:
+    elif path == "/backward":
         move_backward()
-    elif "/left" in path:
+    elif path == "/left":
         move_left()
-    elif "/right" in path:
+    elif path == "/right":
         move_right()
-    elif "/stop" in path:
+    elif path == "/stop":
+        stop()
+    else:
+    # Default = stop (safety)
         stop()
 
     # Main control UI
